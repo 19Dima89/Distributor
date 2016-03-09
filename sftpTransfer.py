@@ -1,15 +1,16 @@
-import paramiko
-import sys
-import os
 from utility import tvShowInfo
 from utility import fileCollector
 from utility import normalizeScript
+from utility import paramikoConnection
 from shows import dailiesScript
 from shows import tvShowScript
 from shows import realityScript
 import psycopg2
+import paramiko
+import sys
+import os
 
-downloadDirectory = "/home/doom/Downloads/"
+downloadDirectory = "/home/doom/Downloads/sambaDir/"
 
 #If .part files are present in the downloadDirectory exit the script
 partFiles = fileCollector.getFiles(downloadDirectory, "*", "part")
@@ -19,23 +20,23 @@ if len(partFiles) != 0:
 
 #Open database connection
 try:
-    dbconnection = psycopg2.connect("dbname='DistributorDB' user='xxx' host='xxx' password='xxx' connect_timeout=5")
+    dbconnection = psycopg2.connect("dbname='DistributorDB' user='postgres' host='192.168.2.100' password='dima30989' connect_timeout=5")
 except:
     print "No connection to the database could be established!"
     sys.exit(0)
 
 #SFTP Authentication
-host = "xxx"
-port = 000
-transport = paramiko.Transport((host,port))
+host = "192.168.2.107"
+port = 2022
 
-password = "xxx"
-username = "xxx"
+password = "dieter30989"
+username = "doom"
+
+#Establish SFTP connection    
+connection = paramikoConnection.getSFTPConnection(host, port, username, password)
+sftp = connection["sftp"]
+ssh = connection["ssh_conn"]
     
-transport.connect(username = username, password = password)
-
-sftp = paramiko.SFTPClient.from_transport(transport)
-
 #Copy all dailies to their designated directory
 dailiesScript.moveDailies(downloadDirectory, sftp, dbconnection)
 
@@ -50,4 +51,4 @@ tvShowScript.moveTVShows(downloadDirectory, sftp)
 
 #Close sftp connection
 sftp.close()
-transport.close()
+ssh.close()
