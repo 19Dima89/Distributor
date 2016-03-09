@@ -20,17 +20,17 @@ if len(partFiles) != 0:
 
 #Open database connection
 try:
-    dbconnection = psycopg2.connect("dbname='DistributorDB' user='postgres' host='192.168.2.100' password='dima30989' connect_timeout=5")
+    dbconnection = psycopg2.connect("dbname='DistributorDB' user='xxx' host='xxx' password='xxx' connect_timeout=5")
 except:
     print "No connection to the database could be established!"
     sys.exit(0)
 
 #SFTP Authentication
-host = "192.168.2.107"
-port = 2022
+host = "xxx"
+port = 000
 
-password = "dieter30989"
-username = "doom"
+password = "xxx"
+username = "xxx"
 
 #Establish SFTP connection    
 connection = paramikoConnection.getSFTPConnection(host, port, username, password)
